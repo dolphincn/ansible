@@ -1,0 +1,10 @@
+- import_tasks: selinux_config.yml
+- name: copy user parameter
+  template: src=userparameter_nginx.conf dest={{ zabbix_agent_d_dir }}
+  notify:
+  - reload nginx service
+- name: copy nginx status server config
+  template: src=nginx_status.conf dest={{ nginx_conf_d_dir }}
+  notify:
+  - reload nginx service
+

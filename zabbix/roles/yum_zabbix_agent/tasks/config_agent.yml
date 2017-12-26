@@ -6,7 +6,7 @@
     group: root
     mode: 0755
 - name: copy ssl ca client crt and key file
-  copy: src={{ item }} dest={{ zba_ssl_dir }}
+  copy: src=ssl/{{ item }} dest={{ zba_ssl_dir }}
   with_items:
     - zbx_ca.crt
     - zbx_client.crt

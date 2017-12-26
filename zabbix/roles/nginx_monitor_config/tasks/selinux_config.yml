@@ -1,0 +1,9 @@
+- name: check nginx monitor port if is using
+  shell: semanage port -l | grep -i "tcp" | grep {{ nginx_monitor_port }}
+  register: exists_nm_port
+  ignore_errors: True
+- debug: msg="nginx_monitor_port is using"
+  when: exists_nm_port|success
+- name: add port for selinux
+  shell: semanage port -a -t http_port_t -p tcp {{ nginx_monitor_port }}
+  when: exists_nm_port|failed

@@ -1,10 +1,11 @@
-- hosts: mariadb-gelera webs
+- hosts: nginx_linux
   remote_user: test.admin
   become: yes
   become_method: sudo
   become_user: root
   roles:
-    - yum_zabbix_agent
+    - { role: yum_zabbix_agent, tags: ["zabbix-agent"] }
+    - { role: nginx_monitor_config, tags: ["nginx"] }
   vars:
     zba_ssl_dir: /etc/zabbix/ssl
     zba_LogFile_Dir: /data/log/zabbix
