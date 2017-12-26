@@ -1,0 +1,29 @@
+- name: backup php-fpm www.conf
+  shell: cp {{ php_fpm_d_www_conf }} {{ php_fpm_d_www_conf }}.'date +"%F_%H%M%S"'
+
+- name: check if enable php-fpm status
+  shell: grep -i -E "^[[:space:]]*pm.status_path[[:space:]]*=.*" {{ php_fpm_d_www_conf }}
+  register: configed_php_fpm_status
+
+- name: enable php-fpm status by config php-fpm www.conf
+  shell: sed -i "/^[[:space:]]*pm.status_path[[:space:]]*=.*/c pm.status_path = /{{ php_fpm_status }}" {{ php_fpm_d_www_conf }}
+  noftify:
+    - reload php-fpm service
+  when: configed_php_fpm_status|success
+
+- name: enable php-fpm status by config php-fpm www.conf
+  shell: sed -i "/^;[[:space:]]*pm.status_path[[:space:]]*=.*/c pm.status_path = /{{ php_fpm_status }}" {{ php_fpm_d_www_conf }}
+  noftify:
+    - reload php-fpm service
+  when: configed_php_fpm_status|failed
+  
+- name: copy php-fpm user parameter for zabbix agent
+  template: src=userparameter_php_fpm.conf dest={{ zabbix_agent_d_dir }}
+  notify:
+   - restart zabbix-agent service
+
+- name: copy php-fpm config for nginx
+  template: src=php_fpm_status.conf dest={{ nginx_conf_d_dir }}
+  notify:
+   - reload nginx service
+

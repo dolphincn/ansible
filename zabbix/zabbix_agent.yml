@@ -6,6 +6,7 @@
   roles:
     - { role: yum_zabbix_agent, tags: ["zabbix-agent"] }
     - { role: nginx_monitor_config, tags: ["nginx"] }
+    - { role: php_fpm_monitor_config, tags: ["php_fpm"] }
   vars:
     zba_ssl_dir: /etc/zabbix/ssl
     zba_LogFile_Dir: /data/log/zabbix
