@@ -1,0 +1,28 @@
+- name: create /etc/zabbix/ssl
+  file:
+    path: "{{ zba_ssl_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+- name: copy ssl ca client crt and key file
+  copy: src={{ item }} dest={{ zba_ssl_dir }}
+  with_items:
+    - zbx_ca.crt
+    - zbx_client.crt
+    - zbx_client.key
+  notify:
+   - restart zabbix-agent
+- name: create zabbix log folder
+  file: 
+    path: "{{ zba_LogFile_Dir }}"
+    state: directory
+    owner: zabbix
+    group: zabbix
+    mode: 0755
+- name: set selinux context
+  shell: semanage fcontext -a -t zabbix_log_t "{{ zba_LogFile_Dir }}(/.*)?"; restorecon -RFv {{ zba_LogFile_Dir }}
+- name: copy zabbix_agent.conf
+  template: src=zabbix_agentd.conf dest=/etc/zabbix/zabbix_agentd.conf
+  notify:
+   - restart zabbix-agent

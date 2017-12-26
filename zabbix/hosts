@@ -1,0 +1,7 @@
+[mariadb-gelera]
+10.100.120.4 host_name=test-db-vm01
+10.100.120.5 host_name=test-db-vm02
+10.100.120.6 host_name=test-db-vm03
+
+[webs]
+10.100.120.68  host_name=test-web-vm01
