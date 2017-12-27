@@ -1,5 +1,5 @@
-zabbix_agent_d_dir: /etc/zabbix/zabbix_agent.d
+zabbix_agent_d_dir: /etc/zabbix/zabbix_agentd.d
 nginx_conf_d_dir: /etc/nginx/conf.d
-nginx_monitor_port: 8010
+nginx_monitor_port: 55580
 nginx_status: nginx_status
 

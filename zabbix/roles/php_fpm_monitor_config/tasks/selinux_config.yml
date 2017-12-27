@@ -1,0 +1,11 @@
+- name: check  php-fpm monitor port if is using
+  shell: semanage port -l | grep -i "tcp" | grep {{ php_fpm_monitor_port }}
+  register: exists_pf_port
+  ignore_errors: True
+
+- debug: msg="php_fpm_monitor_port {{ php_fpm_monitor_port }} is using"
+  when: exists_pf_port|success
+
+- name: add port for selinux
+  shell: semanage port -a -t http_port_t -p tcp {{ php_fpm_monitor_port }}
+  when: exists_nm_port|failed

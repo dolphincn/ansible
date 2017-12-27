@@ -1,2 +1,8 @@
 - name: reload nginx service
   service: name=nginx state=reloaded
+
+- name: restart zabbix-agent service
+  service: name=zabbix-agent state=restarted
+
+- name: curl nginx status
+  shell: curl -s http://127.0.0.1:{{ nginx_monitor_port }}/{{ nginx_status }}
