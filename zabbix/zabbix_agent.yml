@@ -14,7 +14,7 @@
     zba_ServerActive: 10.100.120.196
     zba_LogFile: "{{ zba_LogFile_Dir }}/zabbix_agentd.log"
     zba_StartAgents: 0
-    zba_Hostname: "{{ host_name }}"
+    zba_Hostname: "{{ ansible_hostname }}"
     zba_HostnameItem: 
     zba_HostMetadataItem: 
     zba_HostMetadata: active linux cloud-dd.com nginx php-fpm 
