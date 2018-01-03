@@ -1,0 +1,11 @@
+- name: install nginx vi yum
+  hosts: nginx_linux
+  remote_user: test.admin
+  become: yes
+  become_method: sudo
+  become_user: root
+  pre_tasks:
+    - import_tasks: pre_tasks/semanage.yml
+  roles:
+    - { role: nginx_yum_install }
+  vars:

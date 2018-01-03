@@ -1,0 +1,12 @@
+- name: copy zabbix-agent user parameter for mysql 
+  template: src=userparameter_mysql.conf dest={{ zabbix_agent_d_dir }}
+  notify:
+    - restart zabbix-agent service
+    - zabbix agent test
+
+- name: copy mysql client config for zabbix agent
+  template: src=.my.cnf dest={{ zabbix_conf_dir }} mode=0640 group=zabbix
+  notify:
+    - restart zabbix-agent service
+    - zabbix agent test
+

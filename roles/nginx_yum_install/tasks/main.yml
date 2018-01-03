@@ -1,0 +1,99 @@
+---
+# Variable setup.
+#- name: Include OS-specific variables.
+#  include_vars: "{{ ansible_os_family }}.yml"
+
+
+# 安装nginx
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: setup-Ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+
+- include_tasks: setup-FreeBSD.yml
+  when: ansible_os_family == 'FreeBSD'
+
+# 用于存放网站内容
+- name: create folder for nginx www 
+  file: 
+    path: "{{ nginx_www_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: selinux configure for nginx www foler
+  shell: semanage fcontext -a -t httpd_sys_content_t "{{ nginx_www_path }}(/.*)?"
+  ignore_errors: yes
+
+- name: restorecon
+  shell: restorecon -RFv {{ nginx_www_path }}
+
+# 用于存放nginx 日志
+- name: create folder for nginx log 
+  file: 
+    path: "{{ nginx_log_path }}"
+    state: directory
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+    mode: 0755
+
+- name: selinux configure for nginx log foler
+  shell: semanage fcontext -a -t httpd_log_t "{{ nginx_log_path }}(/.*)?"
+  ignore_errors: yes
+
+- name: restorecon
+  shell: restorecon -RFv {{ nginx_log_path }}
+
+# nginx 存放基本配置的目录   
+- name: makesure the folder for nginx base config exists
+  file: 
+    path: "{{ nginx_conf_base_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+
+- name: selinux configure for nginx config base foler
+  shell: semanage fcontext -a -t httpd_config_t "{{ nginx_conf_base_path }}(/.*)?"
+  ignore_errors: yes
+
+- name: restorecon
+  shell: restorecon -RFv {{ nginx_conf_base_path }}
+
+- name: makesure the folder for nginx http config exists
+  file:
+    path: "{{ nginx_http_d_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+# nginx 虚拟目录路径
+- name: makesure the folder for nginx vhost config exists
+  file: 
+    path: "{{ nginx_conf_d_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+# Nginx setup.
+- name: Copy nginx configuration in place.
+  template:
+    src: "nginx.conf"
+    dest: "{{ nginx_conf_base_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload nginx service
+
+
+# Vhost configuration.
+#- include: vhosts.yml
+
+- name: Ensure nginx is started and enabled to start at boot.
+  service: name=nginx state=started enabled=yes

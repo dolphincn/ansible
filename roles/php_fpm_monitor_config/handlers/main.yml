@@ -1,0 +1,11 @@
+- name: reload php-fpm service
+  service: name=php-fpm state=reloaded
+
+- name: reload nginx service
+  service: name=nginx state=reloaded
+
+- name: restart zabbix-agent service
+  service: name=zabbix-agent state=restarted
+
+- name: curl php-fpm status
+  shell: curl -s http://127.0.0.1:{{ php_fpm_monitor_port }}/{{ php_fpm_status }}

@@ -1,0 +1,4 @@
+- name: yum install policycoreutils-python
+  yum: name="policycoreutils-python" state="installed"
+- name: yum install zabbix-agent
+  yum: name="zabbix-agent" state="installed"

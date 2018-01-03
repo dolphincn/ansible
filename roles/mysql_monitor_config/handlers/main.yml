@@ -1,0 +1,5 @@
+- name: restart zabbix-agent service
+  service: name=zabbix-agent state=restarted
+
+- name: zabbix agent test 
+  shell: zabbix_agentd -t  "mysql.status.[Com_select]"

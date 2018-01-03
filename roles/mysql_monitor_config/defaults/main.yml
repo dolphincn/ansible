@@ -1,0 +1,7 @@
+zabbix_conf_dir: /etc/zabbix
+zabbix_agent_d_dir: /etc/zabbix/zabbix_agentd.d
+mysql_user: zbx_agent
+mysql_pass: zbx_agent_9898!
+mysql_host: 127.0.0.1
+mysql_host_port: 3306
+socket: 

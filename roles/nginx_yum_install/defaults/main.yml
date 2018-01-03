@@ -1,0 +1,108 @@
+---
+# defaults file for nginx_yum_install
+nginx_yum_repo_enabled: yes
+
+# The name of the nginx package to install.
+nginx_package_names: ['nginx']
+
+#==========================================
+# nginx 文件夹路径
+#==========================================
+
+# nginx 默认配置文件存放路径
+nginx_conf_base_path: /etc/nginx
+
+# nginnx 包含http配置参数文件路径
+# 比如日志配置、fastcgi陪置、denyip、map 等参数设置从http里分离出来，分别单独存放一个文件里。
+nginx_http_d_path: "{{ nginx_conf_base_path }}/http.d"
+
+# 虚拟web服务器存放目录
+nginx_conf_d_path: "{{ nginx_conf_base_path }}/conf.d"
+
+# nginx 日志存放目录
+nginx_log_path: /data/log/nginx
+
+# nginx 网站目录
+nginx_www_path: /data/www
+
+# 默认网站配置文件 
+nginx_default_vhost_path: "{{ nginx_conf_d_path }}/default.conf"
+
+#==========================================
+# 常规配置
+#==========================================
+# nginx pid 文件路径
+nginx_pidfile: /var/run/nginx.pid
+
+# nginx 运行用户
+nginx_user: nginx
+nginx_event_model: epoll
+worker_processes: "{{ ansible_processor_vcpus }}" 
+worker_connections: "2048"
+multi_accept: "off"
+nginx_error_log: "{{ nginx_log_path }}/nginx_error.log warn"
+
+autoindex: 'off'
+server_tokens: 'off'
+sendfile: 'on'
+tcp_nopush: 'on'
+tcp_nodelay: 'on'
+
+keepalive_timeout: 65
+keepalive_requests: 100
+client_header_timeout: 15
+client_body_timeout: 60
+send_timeout: 60
+
+
+types_hash_max_size: 2048
+
+server_names_hash_max_size: 512
+server_names_hash_bucket_size: 128
+
+client_header_buffer_size: 32k
+large_client_header_buffers: '8 128k'
+client_max_body_size: 8M
+
+
+# http_extra_options: ""
+# Example extra http options, printed inside the main server http config:
+# #    extra_http_options: |
+# #      proxy_buffering    off;
+# #      proxy_set_header   X-Real-IP $remote_addr;
+# #      proxy_set_header   X-Scheme $scheme;
+# #      proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+# #      proxy_set_header   Host $http_host;
+#
+# remove_default_vhost: false
+# vhosts: []
+# # Example vhost below, showing all available options:
+# # - listen: "80" # default: "80"
+# #   server_name: "example.com" # default: N/A
+# #   root: "/var/www/example.com" # default: N/A
+# #   index: "index.html index.htm" # default: "index.html index.htm"
+# #   filename: "example.com.conf" # Can be used to set the filename of the vhost file.
+# #
+# #   # Properties that are only added if defined:
+# #   server_name_redirect: "www.example.com" # default: N/A
+# #   error_page: ""
+# #   access_log: ""
+# #   error_log: ""
+# #   extra_parameters: "" # Can be used to add extra config blocks (multiline).
+# #   template: "" # Can be used to override the `vhost_template` per host.
+# #   state: "absent" # To remove the vhost configuration.
+#
+# upstreams: []
+# # - name: myapp1
+# #   strategy: "ip_hash" # "least_conn", etc.
+# #   keepalive: 16 # optional
+# #   servers: {
+# #     "srv1.example.com",
+# #     "srv2.example.com weight=3",
+# #     "srv3.example.com"
+# #   }
+#
+# log_format: |
+#   '$remote_addr - $remote_user [$time_local] "$request" '
+#     '$status $body_bytes_sent "$http_referer" '
+#       '"$http_user_agent" "$http_x_forwarded_for"';

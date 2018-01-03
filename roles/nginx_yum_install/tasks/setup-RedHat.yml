@@ -1,0 +1,16 @@
+- name: Enable nginx repo.
+  template:
+    src: nginx.repo
+    dest: /etc/yum.repos.d/nginx.repo
+    owner: root
+    group: root
+    mode: 0644
+  when: nginx_yum_repo_enabled
+
+- name: Ensure nginx is installed.
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items: 
+    - "{{ nginx_package_names }}"
+  when: nginx_yum_repo_enabled

@@ -1,0 +1,5 @@
+---
+# 确保系统装有semanage命令
+- name: install semanage by install policycoreutils-python
+  yum: update_cache=yes name=policycoreutils-python state=installed
+

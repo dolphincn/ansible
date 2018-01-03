@@ -1,9 +1,0 @@
-
-[epel]
-name=Extra Packages for Enterprise Linux 7 - $basearch
-baseurl=http://dl.fedoraproject.org/pub/epel/7Server/x86_64/
-failovermethod=priority
-enabled=1
-gpgcheck=1
-gpgkey=http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7Server
-
