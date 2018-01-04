@@ -9,3 +9,16 @@
   roles:
     - { role: nginx_yum_install }
   vars:
+    nginx_vhosts:
+      - server_name: "site1.example.com"
+        listen: "80 default_server"
+        root: "{{ nginx_www_path }}/site1.example.com"
+        index: "index.php index.html index.htm"
+        template: "conf.d/php_host.conf"
+        ssl: 'on'
+        php:
+          cache:
+      - server_name: "127.0.0.1"
+        index: "index.html index.htm"
+        template: "nginx_status.conf"
+

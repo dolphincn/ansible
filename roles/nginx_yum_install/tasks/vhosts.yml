@@ -13,7 +13,7 @@
 
 - name: Add managed vhost config files.
   template:
-    src: "{{ item.template|default(vhost.conf) }}"
+    src: "{{ item.template|default('vhost.conf') }}"
     dest: "{{ nginx_conf_d_path }}/{{ item.filename|default(item.server_name.split(' ')[0] ~ '.conf') }}"
     force: yes
     owner: root
@@ -31,8 +31,3 @@
   with_items: "{{ nginx_vhosts }}"
   notify: reload nginx service
 
-- name: Remove legacy vhosts.conf file.
-  file:
-    path: "{{ nginx_conf_d_path }}/vhosts.conf"
-    state: absent
-  notify: reload nginx service

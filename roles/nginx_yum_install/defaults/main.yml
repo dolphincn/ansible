@@ -27,7 +27,7 @@ nginx_www_path: /data/www
 
 # 默认网站配置文件 
 nginx_default_vhost_path: "{{ nginx_conf_d_path }}/default.conf"
-
+nginx_remove_default_vhost: yes
 #==========================================
 # 常规配置
 #==========================================

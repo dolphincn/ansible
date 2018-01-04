@@ -61,8 +61,24 @@
   ignore_errors: yes
 
 - name: restorecon
-  shell: restorecon -RFv {{ nginx_conf_base_path }}
+  shell: restorecon -RFv "{{ nginx_conf_base_path }}"
 
+
+# nginx ssl的目录   
+- name: makesure the folder for nginx base config exists
+  file: 
+    path: "{{ nginx_conf_base_path }}/ssl"
+    state: directory
+    owner: root
+    group: "{{ nginx_user }}"
+    mode: 0640
+
+- name: create dhparam for ssl
+  shell: openssl dhparam -out "{{ nginx_conf_base_path }}/ssl/dhparam.pem" 4096
+  ignore_errors: yes
+
+
+# nginx http 分离出来的配置文件存放目录
 - name: makesure the folder for nginx http config exists
   file:
     path: "{{ nginx_http_d_path }}"
@@ -93,7 +109,8 @@
 
 
 # Vhost configuration.
-#- include: vhosts.yml
+- include_tasks: vhosts.yml
+  tags: conf
 
 - name: Ensure nginx is started and enabled to start at boot.
   service: name=nginx state=started enabled=yes
