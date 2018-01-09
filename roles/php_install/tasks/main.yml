@@ -1,0 +1,46 @@
+---
+# tasks file for php_install
+
+
+# 检测系统类型
+- name: set os_family, like 'Ubuntu', 'RedHat' that include centos, 'FreeBSD', 'Debian', 'OpenBSD', 'Archlinux'
+  set_fact: 
+    os_family: "{{ ansible_os_family }}"
+  tags: install,config
+
+- name: set os_family special for Ubuntu
+  set_fact: 
+    os_family: "{{ ansible_distribution }}"
+  when:  ansible_distribution  == 'Ubuntu'
+  tags: install,config
+
+# 通过yum 源等二进制安装包安装php
+- name: install php from binary
+  include_tasks: install_php_on_{{ os_family }}_from_binary.yml
+  when: install_php_from_source == false
+  tags: install
+
+
+# 通过源码安装php
+- name: install php from source
+  include_tasks: install_php_on_{{ os_family }}_from_source.yml
+  when: install_php_from_source == true
+  tags: install
+
+
+# 配置通过yum源等二进制安装包安装的php
+- name: config php for binary install
+  include_tasks: config_php_on_{{ os_family }}_from_binary.yml
+  when: install_php_from_source == false
+  tags: config
+
+# 配置通过源码安装的PHP
+- name: config php for source install
+  include_tasks: config_php_on_{{ os_family }}_from_source.yml
+  when: install_php_from_source == true
+  tags: config
+  
+
+# make sure php-fpm startup on systemct restart
+- name: start php-fpm
+  service: name=php-fpm state=started enabled=yes 

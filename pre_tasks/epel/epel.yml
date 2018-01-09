@@ -1,0 +1,3 @@
+- name: Configure epel repo
+  template: src=epel.repo dest=/etc/yum.repos.d/epel.repo owner=root group=root mode=0644
+

@@ -19,6 +19,8 @@ nginx_http_d_path: "{{ nginx_conf_base_path }}/http.d"
 # 虚拟web服务器存放目录
 nginx_conf_d_path: "{{ nginx_conf_base_path }}/conf.d"
 
+nginx_ssl_path: "{{ nginx_conf_base_path }}/ssl"
+
 # nginx 日志存放目录
 nginx_log_path: /data/log/nginx
 

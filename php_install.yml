@@ -1,0 +1,11 @@
+- name: install php
+  hosts: php_linux
+  remote_user: test.admin
+  become: yes
+  become_method: sudo
+  become_user: root
+  pre_tasks:
+  roles:
+    - { role: php_install }
+  vars:
+    

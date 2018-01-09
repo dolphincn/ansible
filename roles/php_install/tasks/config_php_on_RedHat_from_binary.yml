@@ -1,0 +1,38 @@
+---
+
+- debug: msg="==> Setting phg-fpm on CentOS system"
+
+# Setting  PHP7.
+- name: create socket directory for CentOS 6
+  file: path=/run/php-fpm/ state=directory mode=0755 owner={{ user }} group= {{ group }}
+  when: ansible_distribution_major_version == "6"
+
+# ==========================================
+# copy php config file
+# ==========================================
+
+- name: copy php.ini
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { src: 'php.ini', dest: '{{ php_ini_file_path }}' }
+    - { src: 'www.conf', dest: '{{ php_fpm_www_config_file_path }}' }
+    - { src: '10-opcache.ini', dest: '{{ php_d_path }}/10-opcache.ini' }
+  notify: restart php-fpm service
+
+# ==========================================
+# 配置 php-fpm.conf
+# ==========================================
+
+- name: set pid file of php
+  lineinfile:
+    dest: "{{ php_fpm_config_file_path }}"
+    regexp: '^pid =.*'
+    line: "pid = {{ pid | default('/run/php-fpm/php-fpm.pid') }}"
+    state: present
+  notify: restart php-fpm service
+

@@ -1,0 +1,12 @@
+# nginx 确保 ssl的目录 存在
+- name: makesure the folder for nginx base config exists
+  file:
+    path: "{{ nginx_ssl_path }}"
+    state: directory
+    owner: root
+    group: "{{ nginx_user }}"
+    mode: 0640
+
+- name: create dhparam for ssl
+  shell: openssl dhparam -out "{{ nginx_ssl_path }}/dhparam.pem" 4096
+  ignore_errors: yes

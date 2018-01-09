@@ -1,0 +1,13 @@
+- name: copy repo
+  template: src={{ item }} dest=/etc/yum.repos.d/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - epel.repo
+    - ius.repo 
+
+# yum 安装 php 组件
+- name: yum install php
+  yum: 
+    name: "{{ php_package_names|join(',') }}"
+    state: "{{ php_package_state }}"
+    update_cache: yes
+

@@ -1,0 +1,11 @@
+---
+# handlers file for php_install
+- name: restart php-fpm service
+  service: name=php-fpm state=restarted
+
+- name: reload php-fpm service
+  service: name=php-fpm state=reloaded
+
+- name: start php-fpm service
+  service: name=php-fpm state=started enabled=yes
+

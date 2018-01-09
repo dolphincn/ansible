@@ -5,3 +5,7 @@
 
 [nginx_linux]
 10.100.120.69  host_name=test-web-vm02
+10.100.120.70  host_name=test-web-vm03
+
+[php_linux:children]
+nginx_linux

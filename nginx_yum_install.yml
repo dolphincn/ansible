@@ -6,6 +6,7 @@
   become_user: root
   pre_tasks:
     - import_tasks: pre_tasks/semanage.yml
+    - import_tasks: pre_tasks/epel/epel.yml
   roles:
     - { role: nginx_yum_install }
   vars:
@@ -15,9 +16,7 @@
         root: "{{ nginx_www_path }}/site1.example.com"
         index: "index.php index.html index.htm"
         template: "conf.d/php_host.conf"
-        ssl: 'on'
         php:
-          cache:
       - server_name: "127.0.0.1"
         index: "index.html index.htm"
         template: "nginx_status.conf"

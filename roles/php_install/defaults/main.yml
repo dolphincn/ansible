@@ -1,0 +1,93 @@
+---
+# defaults file for php_install
+# 默认基本变量
+
+install_php_from_source: false
+
+# php yum 安装的配置文件路径
+
+php_run_path: "/run/php-fpm"
+pid: "{{ php_run_path }}/php-fpm.pid"
+php_fpm_socket_file_path: "{{ php_run_path }}/php-fpm.socket"
+php_fastcgi_listen: 127.0.0.1:9000
+ 
+php_conf_base_path: /etc
+php_ini_file_path: '{{ php_conf_base_path }}/php.ini'
+php_d_path: '{{ php_conf_base_path }}/php.d'
+php_fpm_d_path: '{{ php_conf_base_path }}/php-fpm.d'
+php_fpm_www_config_file_path: '{{ php_fpm_d_path }}/www.conf'
+php_fpm_config_file_path: '{{ php_conf_base_path }}/php-fpm.conf'
+
+
+# php 安装参数
+php_package_state: installed
+php_package_prefix: php56u
+php_package_names: 
+  - "{{ php_package_prefix }}"
+  - "{{ php_package_prefix }}-fpm"
+  - "{{ php_package_prefix }}-common"
+  - "{{ php_package_prefix }}-bcmath"
+  - "{{ php_package_prefix }}-pdo"
+  - "{{ php_package_prefix }}-mysqlnd"
+  - "{{ php_package_prefix }}-opcache"
+  - "{{ php_package_prefix }}-xml"
+  - "{{ php_package_prefix }}-mcrypt"
+  - "{{ php_package_prefix }}-gd"
+  - "{{ php_package_prefix }}-devel"
+  - "{{ php_package_prefix }}-intl"
+  - "{{ php_package_prefix }}-mbstring"
+  - "{{ php_package_prefix }}-soap"
+  - "{{ php_package_prefix }}-pear"
+  - "{{ php_package_prefix }}-cli"
+  - "{{ php_package_prefix }}-pecl-redis"
+  - "{{ php_package_prefix }}-pecl-memcached"
+  - "{{ php_package_prefix }}-pecl-jsonc-devel"
+  - "{{ php_package_prefix }}-pecl-jsonc"
+
+# ====================================
+# php-fpm.d/www.conf 配置参数
+# ====================================
+
+user: nginx
+group: nginx
+listen_allowed_clients: '127.0.0.1'
+listen: '{{ php_fpm_socket_file_path }}'
+listen_owner: '{{ user }}'
+listen_group: '{{ group }}'
+listen_mode: '0660'
+pm_status_path: /php-fpm-status
+ping_path: /ping
+
+# dynamic|static
+pm: dynamic
+pm_max_children: 200
+pm_start_servers: 30
+pm_min_spare_servers: 20
+pm_max_spare_servers: 60
+pm_max_requests: 1000
+request_terminate_timeout: 600
+
+slowlog: /var/log/php-fpm/www-slow.log
+# 0 表示关闭php慢日志, 1以上的数字，表示php执行超过多少秒就就把php执行程序记录在日志中
+request_slowlog_timeout: 0
+
+session_save_handler: files
+session_save_path: /var/lib/php-fpm/session
+soap_wsdl_cache_dir: /var/lib/php-fpm/wsdlcache
+
+
+# ====================================
+# php.ini
+# ====================================
+
+mysql_socket_file_path: /run/mysql/mysql.socket
+
+max_execution_time: 120
+memory_limit: 128M
+post_max_size: 8M
+upload_max_filesize: 8M
+max_input_time: 300
+mysqli_default_socket: '{{ mysql_socket_file_path | default(omit) }}'
+pdo_mysql_default_socket: '{{ mysql_socket_file_path | default(omit) }}'
+disable_functions: passthru,exec,system,chroot,scandir,chgrp,chown,shell_exec,proc_open,proc_get_status,popen,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server
+date_timezone: Asia/Shanghai
