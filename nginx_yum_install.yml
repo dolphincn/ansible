@@ -12,7 +12,7 @@
   vars:
     nginx_vhosts:
       - server_name: "site1.example.com"
-        listen: "80 default_server"
+        listen: "80"
         root: "{{ nginx_www_path }}/site1.example.com"
         index: "index.php index.html index.htm"
         template: "conf.d/php_host.conf"

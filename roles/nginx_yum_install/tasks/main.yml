@@ -102,7 +102,23 @@
     mode: 0644
   notify:
     - reload nginx service
+  tags: config
 
+- name: Copy nginx config under http.d.
+  template:
+    src: "{{ item }}"
+    dest: "{{ nginx_http_d_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - 'http.d/log.conf'
+    - 'http.d/map.conf'
+    - 'http.d/gzip.conf'
+    - 'http.d/fastcgi.conf'
+  notify:
+    - reload nginx service
+  tags: config
 
 # Vhost configuration.
 - include_tasks: vhosts.yml
