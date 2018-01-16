@@ -1,0 +1,5 @@
+---
+
+- name: copy lsyncd.conf
+  template: src='{{ app_name }}.conf' dest={{ lsyncd_conf_file_path }} owner={{ user }} group={{ group }} mode=0640
+  notify: restart {{ app_name }} service

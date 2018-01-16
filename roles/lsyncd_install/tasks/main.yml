@@ -1,0 +1,54 @@
+---
+# tasks file for {{ app_name }} install
+
+# 设置安装应用的名字
+- name: set app name
+  set_fact:
+    app_name: lsyncd
+  tags: install,config
+
+
+# 检测系统类型
+- name: set os_family, like 'Ubuntu', 'RedHat' that include centos, 'FreeBSD', 'Debian', 'OpenBSD', 'Archlinux','Windows'
+  set_fact:
+    os_family: "{{ ansible_os_family }}"
+  tags: install,config
+
+- name: set os_family special for Ubuntu
+  set_fact:
+    os_family: "{{ ansible_distribution }}"
+  when:  ansible_distribution  == 'Ubuntu'
+  tags: install,config
+
+
+# 通过yum 源等二进制安装包安装{{ app_name }}
+- name: install {{ app_name }} from binary package
+  include_tasks: {{ os_family }}_install_{{ app_name }}_from_binary.yml
+  when: install_{{ app_name }}_from_source == false
+  tags: install
+
+# 通过yum 源等二进制安装包安装{{ app_name }}
+- name: install {{ app_name }} from source
+  include_tasks: {{ os_family }}_install_{{ app_name }}_from_source.yml
+  when: install_{{ app_name }}_from_source == true
+  tags: install
+
+
+
+# 配置通过yum源等二进制安装包安装的{{ app_name }}
+- name: config {{ app_name }} for binary install
+  include_tasks: {{ os_family }}_config_{{ app_name }}_from_binary.yml
+  when: install_{{ app_name }}_from_source == false
+  tags: config-server
+
+# 配置通过源码安装的{{ app_name }}
+- name: config {{ app_name }} for source install
+  include_tasks: {{ os_family }}_config_{{ app_name }}_from_source.yml
+  when: install_{{ app_name }}_from_source == true
+  tags: config-server
+
+
+
+# make sure {{ app_name }}d startup on systemct restart
+#- name: start {{ app_name }}d
+#  service: name={{ app_name }}d state=started enabled=yes

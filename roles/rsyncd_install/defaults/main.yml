@@ -1,0 +1,27 @@
+---
+# defaults file for rsyncd_install
+
+install_rsync_from_source: true
+
+complie_configure_prifix: '/usr'
+
+rsync_source_file_name: 'rsync-3.1.2'
+rsync_source_zip_file: '{{ rsync_source_file_name }}.tar.gz'
+#rsync_source_zip_file: 'https://download.samba.org/pub/rsync/{{ rsync_source_file_name }}.tar.gz'
+rsynce_source_unzip_path: '/opt'
+rsynce_source_compile_path: '{{ rsynce_source_unzip_path }}/{{ rsync_source_file_name }}'
+
+compile_depend_packages:
+  - gcc
+
+#======================================
+# 配置文件路径
+#======================================
+rsyncd_conf_file_path: /etc/rsyncd.conf
+rsyncd_conf_d_path: /etc/rsyncd.d
+
+#======================================
+# 配置参数 
+#======================================
+user: root
+group: root

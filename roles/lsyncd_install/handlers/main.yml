@@ -1,0 +1,4 @@
+---
+# handlers file for lsyncd_install
+- name: restart {{ app_name }} service
+  service: name={{ app_name }} state=restarted enabled=yes

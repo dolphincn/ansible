@@ -1,0 +1,16 @@
+- name: make sure directory {{ rsyncd_conf_d_path }} exists
+  file: path={{ rsyncd_conf_d_path }} state=directory owner={{ user }} group={{ group }} mode=0755
+  
+- name: copy config file
+  template: src={{ item.src }} dest={{ item.dest }} mode={{ item.mode }} owner={{ user }} group={{ group }}
+  with_items:
+    - { src: 'rsyncd.conf', dest: '{{ rsyncd_conf_file_path }}', mode: '0644' }
+    - { src: 'rsyncd.motd', dest: '{{ rsyncd_conf_d_path }}/rsyncd.motd', mode: '0644' }
+  notify:
+    - restart rsyncd service 
+
+- name: config module
+  include_tasks: config_rsync_module.yml
+  notify:
+    - restart rsyncd service
+

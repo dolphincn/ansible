@@ -4,8 +4,8 @@
   become_method: sudo
   become_user: root
   roles:
-    - { role: yum_zabbix_agent, tags: ["zabbix-agent"] }
-    - { role: mysql_monitor_config, tags: ["mysql"] }
+    - { role: zabbix_agent_yum_install }
+    - { role: mysql_monitor_config }
   vars:
     zba_ssl_dir: /etc/zabbix/ssl
     zba_LogFile_Dir: /data/log/zabbix

@@ -1,0 +1,11 @@
+---
+# 检测系统类型
+- name: set os_family, like 'Ubuntu', 'RedHat' that include centos, 'FreeBSD', 'Debian', 'OpenBSD', 'Archlinux'
+  set_fact:
+    os_family: "{{ ansible_os_family }}"
+
+- name: set os_family special for Ubuntu
+  set_fact:
+    os_family: "{{ ansible_distribution }}"
+  when:  ansible_distribution  == 'Ubuntu'
+

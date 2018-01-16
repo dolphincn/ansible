@@ -1,0 +1,7 @@
+---
+# defaults file for lsyncd_install
+install_lsyncd_from_source: false
+app_state: installed
+lsyncd_conf_file_path: /etc/lsyncd.conf
+user: root
+group: root

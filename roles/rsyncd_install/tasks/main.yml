@@ -1,0 +1,34 @@
+---
+# tasks file for rsyncd_install
+
+- name: check and set os_family
+  import_tasks: os_family.yml
+  tags: install,config-server
+
+# 通过yum 源等二进制安装包安装rsync
+- name: install rsync from yum
+  include_tasks: install_rsync_on_{{ os_family }}_from_binary.yml
+  when: install_rsync_from_source == false
+  tags: install
+
+# 通过yum 源等二进制安装包安装rsync
+- name: install rsync from source
+  include_tasks: install_rsync_on_{{ os_family }}_from_source.yml
+  when: install_rsync_from_source == true
+  tags: install
+
+# 配置通过yum源等二进制安装包安装的rsync
+- name: config rsync for binary install
+  include_tasks: config_rsync_on_{{ os_family }}_from_binary.yml
+  when: install_rsync_from_source == false
+  tags: config-server
+
+# 配置通过源码安装的rsync
+- name: config rsync for source install
+  include_tasks: config_rsync_on_{{ os_family }}_from_source.yml
+  when: install_rsync_from_source == true
+  tags: config-server
+
+# make sure rsyncd startup on systemct restart
+#- name: start rsyncd
+#  service: name=rsyncd state=started enabled=yes

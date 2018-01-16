@@ -1,0 +1,60 @@
+- name: Ensure rsyncd_conf_d_path exists.
+  file:
+    path: "{{ rsyncd_conf_d_path }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ group }}"
+    mode: 0640
+
+- name: Add managed module config files.
+  template:
+    src: "{{ item.value.template|default('module.conf') }}"
+    dest: "{{ rsyncd_conf_d_path }}/{{ item.value.file_name|default(item.key ~ '.conf') }}"
+    force: yes
+    owner: "{{ user }}"
+    group: "{{ group }}"
+    mode: 0640
+  when: item.value.state|default('present') != 'absent'
+  with_dict: "{{ modules }}"
+  notify: restart rsyncd service
+
+- name: Remove managed module config files.
+  file:
+    path: "{{ rsyncd_conf_d_path }}/{{ item.value.file_name|default(item.key ~ '.conf') }}"
+    state: absent
+  when: item.value.state|default('present') == 'absent'
+  with_dict: "{{ modules }}"
+  notify: restart rsyncd service
+
+- name: add secrets files
+  template:
+    src: rsyncd.secrets
+    dest: "{{ rsyncd_conf_d_path }}/{{ item.value.secrets_file_name|default(item.key ~ '.secrets') }}"
+    force: yes
+    owner: "{{ user }}"
+    group: "{{ group }}"
+    mode: 0600
+  when: item.value.state|default('present') != 'absent'
+  with_dict: "{{ modules }}"
+  notify: restart rsyncd service
+
+- name: Remove secrets files.
+  file:
+    path: "{{ rsyncd_conf_d_path }}/{{ item.value.secrets_file_name|default(item.key ~ '.secrets') }}"
+    state: absent
+  when: item.value.state|default('present') == 'absent'
+  with_dict: "{{ modules }}"
+  notify: restart rsyncd service
+
+
+- name: add mode path
+  file: path={{ item.value.path }} state=directory owner={{ item.value.user | default(user) }} group={{ item.value.group | default(group) }} mode={{ item.value.nide | default('0755') }}
+  when: item.value.state|default('present') != 'absent'
+  with_dict: "{{ modules }}"
+
+- name: Remove mode path.
+  file: path={{ item.value.path }} state=absent
+  when: item.value.state|default('present') == 'absent'
+  with_dict: "{{ modules }}"
+
+

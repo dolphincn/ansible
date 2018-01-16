@@ -1,0 +1,7 @@
+---
+# handlers file for rsyncd_install
+- name: restart rsyncd service
+  service: name=rsyncd state=restarted enabled=yes
+
+- name: reload rsyncd service
+  service: name=rsyncd state=reloaded

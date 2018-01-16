@@ -1,0 +1,10 @@
+---
+- name: make sure install gcc
+  yum: name={{ compile_depend_packages | join(',') | default('gcc') }} state=installed update_cache=yes
+
+- name: compile rsync and make install
+  unarchive: src={{ rsync_source_zip_file }} dest={{ rsynce_source_unzip_path }} copy=yes 
+
+- name: compile rsync and make install
+  shell: "cd {{ rsynce_source_compile_path }} && ./configure --prefix={{ complie_configure_prifix }} && make && make install | tee make_install.log"
+  

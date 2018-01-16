@@ -1,0 +1,17 @@
+- name: install rsync
+  hosts: rsync_linux
+  remote_user: test.admin
+  become: yes
+  become_method: sudo
+  become_user: root
+  pre_tasks:
+  roles:
+    - { role: rsyncd_install }
+  vars:
+    modules:
+      wordpress:
+        path: '/data/www/wordpress'
+        auth_users: 'rsync.www,rsync.copy'
+        read_only: false
+        write_only: true
+    
